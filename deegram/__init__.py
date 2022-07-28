@@ -55,26 +55,19 @@ bot.loop.run_until_complete(
         commands=[
             types.BotCommand(
                 command='start',
-                description='Get the welcome message 🖍️'),
+                description='Get the welcome message'),
             types.BotCommand(
                 command='help',
-                description='How to use the bot ❓'),
+                description='How to use the bot'),
             types.BotCommand(
                 command='settings',
-                description='Change your preferences ⚙️'),
+                description='Change your preferences'),
             types.BotCommand(
                 command='info',
-                description='about the bot dev ♥️'),
+                description='Get some useful information about the bot'),
             types.BotCommand(
                 command='stats',
-                description='Get some statistics about the bot 💾'),
-            types.BotCommand(
-                command='source',
-                description='Source Code of This bot 🎵'),
-            types.BotCommand(
-                command='restart',
-                description='Bot owNer Command ⭐'),
-       
+                description='Get some statistics about the bot'),
         ]
     ))
 )

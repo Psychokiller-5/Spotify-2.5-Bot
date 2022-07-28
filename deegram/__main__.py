@@ -36,13 +36,6 @@ async def get_help(event: Union[NewMessage.Event, Message]):
     await event.reply(translate.HELP_MSG)
 
 
-
-
-@bot.on(events.NewMessage(pattern='/source'))
-async def info(event: Union[NewMessage.Event, Message]):
-    await event.reply(translate.SOURCE_MSG)
-    raise events.StopPropagation
-
 @bot.on(events.NewMessage(pattern='/info'))
 async def info(event: Union[NewMessage.Event, Message]):
     await event.reply(translate.INFO_MSG)

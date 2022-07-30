@@ -25,7 +25,7 @@ inline_search_buttons = [
 ]
 
 
-@bot.on(events.NewMessage(pattern='shehsh'))
+@bot.on(events.NewMessage(pattern='/start'))
 async def start(event: Union[NewMessage.Event, Message]):
     await event.reply(translate.WELCOME_MSG, buttons=inline_search_buttons)
     raise events.StopPropagation

@@ -2,118 +2,77 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-import deethon
-from telethon import events
-from telethon.tl.types import DocumentAttributeAudio
-
-from .. import bot, users, deezer
-from ..helper.download_status import DownloadStatus
-from ..helper.upload_status import UploadStatus
-from ..utils import translate
-from ..utils.fast_download import upload_file
-
 if TYPE_CHECKING:
     from typing import Union
     from telethon.tl.patched import Message
     from telethon.events import NewMessage
 
+import shutil
+import time
 
-@bot.on(events.NewMessage(pattern=r"https?://(?:www\.)?deezer\.com/(?:\w+/)?track/(\d+)"))
-async def track_link(event: Union[NewMessage.Event, Message]):
-    try:
-        track = deethon.Track(event.pattern_match.group(1))
-    except deethon.errors.DeezerApiError:
-        await event.reply("Track not found.")
-        raise events.StopPropagation
-    await event.respond(
-        translate.TRACK_MSG.format(
-            track.title,
-            track.artist,
-            track.album.title,
-            track.release_date
-        ),
-        file=track.album.cover_xl)
-    quality = users[event.chat_id]["quality"]
-    download_status = DownloadStatus(event)
-    await download_status.start()
-    file = await bot.loop.run_in_executor(None, deezer.download_track, track, quality, download_status.progress)
-    await download_status.finished()
-    file_ext = ".mp3" if quality.startswith("MP3") else ".flac"
-    file_name = track.artist + " - " + track.title + file_ext
-    upload_status = UploadStatus(event)
-    await upload_status.start()
-    async with bot.action(event.chat_id, 'audio'):
-        uploaded_file = await upload_file(
-            file_name=file_name,
-            client=bot,
-            file=open(file, 'rb'),
-            progress_callback=upload_status.progress,
-        )
-        await upload_status.finished()
-        await bot.send_file(
-            event.chat_id,
-            uploaded_file,
-            thumb=track.album.cover_medium,
-            attributes=[
-                DocumentAttributeAudio(
-                    voice=False,
-                    title=track.title,
-                    duration=track.duration,
-                    performer=track.artist,
-                )
-            ],
-        )
+from telethon import Button, events
+
+from . import bot, botStartTime, logger, plugins
+from .utils import translate, fetch
+from .utils.bot_utils import get_readable_file_size, get_readable_time
+
+plugins.load()
+
+inline_search_buttons = [
+    [Button.switch_inline(translate.SEARCH_TRACK, same_peer=True),
+     Button.switch_inline(translate.SEARCH_ALBUM, query=".a ", same_peer=True)],
+    [Button.inline('❌')]
+]
+
+
+@bot.on(events.NewMessage(pattern='/start'))
+async def start(event: Union[NewMessage.Event, Message]):
+    await event.reply(translate.WELCOME_MSG, buttons=inline_search_buttons)
     raise events.StopPropagation
 
 
-@bot.on(events.NewMessage(pattern=r"https?://(?:www\.)?deezer\.com/(?:\w+/)?album/(\d+)"))
-async def album_link(event: Union[NewMessage.Event, Message]):
-    try:
-        album = deethon.Album(event.pattern_match.group(1))
-    except deethon.errors.DeezerApiError:
-        await event.respond("Not found")
-        raise events.StopPropagation
+@bot.on(events.NewMessage(pattern='/help'))
+async def get_help(event: Union[NewMessage.Event, Message]):
+    await event.reply(translate.HELP_MSG)
 
-    await event.respond(
-        translate.ALBUM_MSG.format(
-            album.title,
-            album.artist,
-            album.release_date,
-            album.total_tracks,
-        ),
-        file=album.cover_xl,
-    )
 
-    quality = users[event.from_id]["quality"]
-    msg = await event.reply(translate.DOWNLOAD_MSG)
-    tracks = deezer.download_album(album, quality, stream=True)
-    await msg.delete()
-    async with bot.action(event.chat_id, "audio"):
-        for num, track in enumerate(tracks):
-            file_ext = ".mp3" if quality.startswith("MP3") else ".flac"
-            file_name = f"{album.artist} - {album.tracks[num].title}{file_ext}"
-            upload_status = UploadStatus(event, num + 1, album.total_tracks)
-            await upload_status.start()
-            r = await upload_file(
-                file_name=file_name,
-                client=bot,
-                file=open(track, 'rb'),
-                progress_callback=upload_status.progress
-            )
-            await upload_status.finished()
-            await bot.send_file(
-                event.chat_id,
-                r,
-                attributes=[
-                    DocumentAttributeAudio(
-                        voice=False,
-                        title=album.tracks[num].title,
-                        duration=album.tracks[num].duration,
-                        performer=album.artist,
-                    )
-                ],
-            )
-            await msg.delete()
-
-    await event.reply(translate.END_MSG)
+@bot.on(events.NewMessage(pattern='/info'))
+async def info(event: Union[NewMessage.Event, Message]):
+    await event.reply(translate.INFO_MSG)
     raise events.StopPropagation
+
+
+@bot.on(events.NewMessage(pattern='/log'))
+async def log(event: Union[NewMessage.Event, Message]):
+    await event.reply(file=f'{__name__}.log')
+    raise events.StopPropagation
+
+
+@bot.on(events.NewMessage(pattern='/stats'))
+async def stats(event: Union[NewMessage.Event, Message]):
+    current_time = get_readable_time((time.time() - botStartTime))
+    total, used, free = shutil.disk_usage('.')
+    total = get_readable_file_size(total)
+    used = get_readable_file_size(used)
+    free = get_readable_file_size(free)
+    await event.reply(translate.STATS_MSG.format(current_time, total, used, free))
+    raise events.StopPropagation
+
+
+@bot.on(events.NewMessage())
+async def search(event: Union[NewMessage.Event, Message]):
+    if event.text.startswith('/'):
+        search_query = ''
+    else:
+        search_query = event.text
+    await event.respond(translate.CHOOSE, buttons=[
+        [Button.switch_inline(translate.SEARCH_TRACK, query=search_query, same_peer=True),
+         Button.switch_inline(translate.SEARCH_ALBUM, query=".a " + search_query, same_peer=True)],
+        [Button.inline('❌')]
+    ])
+
+
+with bot:
+    bot.run_until_disconnected()
+    logger.info('Bot stopped')
+    bot.loop.run_until_complete(fetch.session.close())

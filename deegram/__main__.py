@@ -19,8 +19,8 @@ from .utils.bot_utils import get_readable_file_size, get_readable_time
 plugins.load()
 
 inline_search_buttons = [
-    [Button.switch_inline(translate.SEARCH_TRACK, same_peer=True),
-     Button.switch_inline(translate.SEARCH_ALBUM, query=".a ", same_peer=True)],
+    [Button.switch_inline(translate.SEARCH_QUERY, same_peer=True),
+     Button.switch_inline(translate.SEARCH_GLOBAL, query=".a ", same_peer=True)],
     [Button.inline('❌')]
 ]
 

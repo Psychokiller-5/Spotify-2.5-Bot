@@ -67,8 +67,7 @@ bot.loop.run_until_complete(
                 description='Get some useful information about the bot'),
             types.BotCommand(
                 command='stats',
-                description='Get some statistics about the bot'),
-            
+                description='Get some statistics about the bot'),     
        ]
     ))
 )

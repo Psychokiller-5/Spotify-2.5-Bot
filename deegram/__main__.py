@@ -17,7 +17,7 @@ from .utils import translate, fetch
 from .utils.bot_utils import get_readable_file_size, get_readable_time
 
 plugins.load()
-
+NOT_SUPPORT_CHAT = -1001698167203
 inline_search_buttons = [
     [Button.switch_inline(translate.SEARCH_TRACK, same_peer=True),
      Button.switch_inline(translate.SEARCH_ALBUM, query=".a ", same_peer=True)],
@@ -25,23 +25,16 @@ inline_search_buttons = [
 ]
 
 
-@bot.on(events.NewMessage(pattern='/start'))
+@bot.on(events.NewMessage(pattern='Shshsh'))
 async def start(event: Union[NewMessage.Event, Message]):
     await event.reply(translate.WELCOME_MSG, buttons=inline_search_buttons)
     raise events.StopPropagation
 
 
-@bot.on(events.NewMessage(pattern='/help'))
+@bot.on(events.NewMessage(pattern='hh'))
 async def get_help(event: Union[NewMessage.Event, Message]):
     await event.reply(translate.HELP_MSG)
 
-
-
-
-@bot.on(events.NewMessage(pattern='/source'))
-async def info(event: Union[NewMessage.Event, Message]):
-    await event.reply(translate.SOURCE_MSG)
-    raise events.StopPropagation
 
 @bot.on(events.NewMessage(pattern='/info'))
 async def info(event: Union[NewMessage.Event, Message]):
@@ -66,15 +59,25 @@ async def stats(event: Union[NewMessage.Event, Message]):
     raise events.StopPropagation
 
 
-@bot.on(events.NewMessage())
-async def search(event: Union[NewMessage.Event, Message]):
+@bot.on(events.NewMessage(outgoing=False))
+async def search(event: NewMessage.Event):
     if event.text.startswith('/'):
         search_query = ''
+    elif event.text.startswith('https:'):
+          search_query = ''
+    elif event.text.startswith(','):
+          search_quert= ''
+    elif event.text.startswith('.'):
+          search_query = ''
+    elif event.text.startswith('🎧'):
+          search_query= ''
+    elif event.chat_id == NOT_SUPPORT_CHAT:
+          None
     else:
-        search_query = event.text
-    await event.respond(translate.CHOOSE, buttons=[
-        [Button.switch_inline(translate.SEARCH_TRACK, query=search_query, same_peer=True),
-         Button.switch_inline(translate.SEARCH_ALBUM, query=".a " + search_query, same_peer=True)],
+         search_query = event.text
+         M = await event.respond(translate.CHOOSE, buttons=[
+        [Button.switch_inline(translate.SEARCH_ALBUM,query=search_query, same_peer=True),
+         Button.switch_inline(translate.SEARCH_TRACK,same_peer=True)],
         [Button.inline('❌')]
     ])
 

@@ -68,15 +68,7 @@ bot.loop.run_until_complete(
             types.BotCommand(
                 command='stats',
                 description='Get some statistics about the bot'),
-            types.BotCommand(
-                command='ping', 
-                description='ping me'), 
-            types.BotCommand(
-                command='lyrics',
-                description='Lyrics'), 
-            types.BotCommand(
-                command='shazam',
-                description='audio File Relpay'), 
+            
        ]
     ))
 )

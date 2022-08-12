@@ -69,12 +69,33 @@ bot.loop.run_until_complete(
                 command='stats',
                 description='Get some statistics about the bot 💾'),
             types.BotCommand(
-                command='source',
-                description='Source Code of This bot 🎵'),
+                command='about',
+                description='To know about this Bot'),
             types.BotCommand(
                 command='restart',
                 description='Bot owNer Command ⭐'),
-       
+            types.BotCommand(
+                command='imdb',
+                description='Search Moves and Song'),
+            types.BotCommand(
+                command='search',
+                description='type your music name '),
+            types.BotCommand(
+                command='id',
+                description='get telegram user id'),
+            types.BotCommand(
+                command='info',
+                description='get telegram user information'),
+            types.BotCommand(
+                command='shazam',
+                description='audio File Relpay'),
+            types.BotCommand(
+                command='lyrics',
+                description='lyrics'),
+            types.BotCommand(
+                command='ping',
+                description='ping me'),
+
         ]
     ))
 )

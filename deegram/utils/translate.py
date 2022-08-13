@@ -9,7 +9,7 @@ INFO_MSG = (
 	f" ℹ Version: 1.0.0\n"
         f" 🍩 Donate: https://www.buymeacoffee.com/PsychoKiller\n"
         f" 💥 Support: @Spotify_yt_music_bot\n
-        f" 💳 Credits: Spotify &  Deezer & yt. "
+        f" 💳 Credits: Spotify &  Deezer & yt\n"
 )
 STATS_MSG = (
 	"Bot Uptime: {}\n"

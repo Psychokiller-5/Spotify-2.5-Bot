@@ -5,8 +5,11 @@ WELCOME_MSG = (
         f"Click /help for more information."
 )
 INFO_MSG = (
-	f"I'm using DEEthon library to download songs from deezer.com .\n"
-	f"I will glad to listen Thanks from you :)"
+	f" 👤 Creator: @psycho_killer5\n"
+	f" ℹ Version: 1.0.0\n"
+        f" 🍩 Donate: https://www.buymeacoffee.com/PsychoKiller\n"
+        f" 💥 Support: @Spotify_yt_music_bot\n
+        f" 💳 Credits: Spotify &  Deezer & yt"
 )
 STATS_MSG = (
 	"Bot Uptime: {}\n"

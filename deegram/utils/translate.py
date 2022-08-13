@@ -43,5 +43,5 @@ TRACK_MSG = (
 	"📅 Date: {}"
 )
 CHOOSE = "Choose:"
-SEARCH_ALBUM = "Search album 💽"
-SEARCH_TRACK = "Search track 🎧"
+SEARCH_ALBUM = "Search Query 💽"
+SEARCH_TRACK = "Search Global 🎧"

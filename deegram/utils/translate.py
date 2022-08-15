@@ -5,7 +5,7 @@ WELCOME_MSG = (
         f"Click /help for more information."
 )
 INFO_MSG = (
-	f" 👤 Creator: @psycho_killer5\nℹ Version: 1.0.0\n🍩 Donate: https://www.buymeacoffee.com/PsychoKiller\n💥 Support: @Spotify_yt_music_bot\n💳 Credits: Spotify &  Deezer & yt"
+	f" 👤 Creator: @psycho_killer5\nℹ Version: 1.0.0\n🍩 Donate: https://www.buymeacoffee.com/PsychoKiller\n💥 Support: @Spotify_Downlo_Bot\n💳 Credits: Spotify &  Deezer & yt"
 )
 STATS_MSG = (
 	"Bot Uptime: {}\n"

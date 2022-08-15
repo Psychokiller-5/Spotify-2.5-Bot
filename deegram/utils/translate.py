@@ -1,4 +1,4 @@
-CREATOR = "@priyanshu_bhardwaj"
+CREATOR = "@psycho_killer5"
 WELCOME_MSG = (
 	f"Hey ..👋\n"
         f"Welcome to Song Downloader Bot .Send your deezer link or Search Inline to download your song .\n\n"
